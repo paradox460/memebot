@@ -76,7 +76,7 @@ class Meme
     private
 
     def word_wrap(text, col = 80)
-      text.gsub(/(.{1,#{col + 4}})(\s+|\Z)/i, "\\1\n")
+      text.gsub(/(.{1,#{col + 4}})(\b+|\Z)/i, "\\1\n")
     end
 
     def scale_text(text)
