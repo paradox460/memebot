@@ -68,7 +68,7 @@ bot = Cinch::Bot.new do
     end
     if path.nil?
       warn 'Couldn\'t find meme'
-      m.reply "Couldn't make that meme"
+      m.reply "IDK what meme \"#{meme}\" is", true
       break
     end
     top.gsub!(/[\x02\x0f\x16\x1f\x12]|\x03(\d{1,2}(,\d{1,2})?)?/, '')
@@ -78,7 +78,7 @@ bot = Cinch::Bot.new do
     file = Meme.generate(path, top.strip, bottom.strip, "#{$store.transaction { $store['watermark_prefix'] }}/#{m.channel.to_s}")
     url = upload(file)
     if url == false
-      m.reply "Couldn't make that meme"
+      m.reply "Couldn't make that meme", true
     else
       m.reply url, true
     end
