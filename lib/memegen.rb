@@ -24,6 +24,20 @@ class Meme
       pointsize = image.columns / 5.0
       stroke_width = pointsize / 30.0
 
+      # Draw watermark
+      unless watermark.nil?
+        watermark_draw = draw.dup
+        watermark_draw.annotate(canvas, 0, 0, 0, 0, watermark) do
+          self.font = 'Helvetica'
+          self.fill = 'white'
+          self.stroke_antialias(true)
+          self.font_weight = 100
+          self.gravity = Magick::SouthEastGravity
+          self.pointsize = 10
+          self.undercolor = 'hsla(0,0,0,.5)'
+        end
+      end
+
       # Draw top
       unless top.empty?
         scale, spacing, text = scale_text(top)
@@ -51,20 +65,6 @@ class Meme
           self.gravity = Magick::SouthGravity
           self.stroke_width = stroke_width * scale
           self.pointsize = pointsize * scale
-        end
-      end
-
-      # Draw watermark
-      unless watermark.nil?
-        watermark_draw = draw.dup
-        watermark_draw.annotate(canvas, 0, 0, 0, 0, watermark) do
-          self.font = 'Helvetica'
-          self.fill = 'white'
-          self.stroke_antialias(true)
-          self.font_weight = 100
-          self.gravity = Magick::SouthEastGravity
-          self.pointsize = 10
-          self.undercolor = 'hsla(0,0,0,.5)'
         end
       end
 
