@@ -1,0 +1,14 @@
+# The channels array will be automatically edited by the bot during run-time.
+# I recommend only editing it when the bot is offline
+channels:
+imgur:
+  client_id:
+irc:
+  server:
+  port:
+  ssl:
+  nick:
+  sasl:
+    username:
+    password:
+watermark_prefix:
