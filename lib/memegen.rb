@@ -26,10 +26,10 @@ class Meme
 
       # Draw top
       unless top.empty?
-        scale, text = scale_text(top)
+        scale, spacing, text = scale_text(top)
         bottom_draw = draw.dup
         bottom_draw.annotate(canvas, 0, 0, 0, 0, text) do
-          self.interline_spacing = -(pointsize / 5)
+          self.interline_spacing = -(pointsize / spacing)
           self.stroke_antialias(true)
           self.stroke = 'black'
           self.fill = 'white'
@@ -41,10 +41,10 @@ class Meme
 
       # Draw bottom
       unless bottom.empty?
-        scale, text = scale_text(bottom)
+        scale, spacing, text = scale_text(bottom)
         bottom_draw = draw.dup
         bottom_draw.annotate(canvas, 0, 0, 0, 0, text) do
-          self.interline_spacing = -(pointsize / 5)
+          self.interline_spacing = -(pointsize / spacing)
           self.stroke_antialias(true)
           self.stroke = 'black'
           self.fill = 'white'
@@ -76,21 +76,28 @@ class Meme
     private
 
     def word_wrap(text, col = 80)
-      text.gsub(/(.{1,#{col + 4}})(\b+|\Z)/i, "\\1\n")
+      text.gsub(/(.{1,#{col}})( +|$\n?)|(.{1,#{col}})/, "\\1\\3\n")
     end
 
     def scale_text(text)
       text = text.dup
       if text.length < 10
         scale = 1.0
+        spacing = 5
       elsif text.length < 24
         text = word_wrap(text, 10)
         scale = 0.7
-      else
+        spacing = 5
+      elsif text.length < 30
         text = word_wrap(text, 18)
         scale = 0.5
+        spacing = 7
+      else
+        text = word_wrap(text, 30)
+        scale = 0.3
+        spacing = 10
       end
-      [scale, text.strip]
+      [scale, spacing, text.strip]
     end
   end
 end
