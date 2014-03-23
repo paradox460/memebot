@@ -5,7 +5,7 @@ require 'oj'
 require 'active_support/core_ext/array/conversions'
 require 'yaml/store'
 
-$store = YAML::Store.new File.join(File.dirname(__FILE__), 'configp.yml')
+$store = YAML::Store.new File.join(File.dirname(__FILE__), 'config.yml')
 $channels = $store.transaction { $store['channels'].uniq }
 
 CLIENT_ID = $store.transaction { $store['imgur']['client_id'] }
