@@ -53,6 +53,7 @@ bot = Cinch::Bot.new do
     c.realname = 'lemaymay'
     c.ssl.use = $store.transaction { $store['irc'].fetch('ssl', false) }
     c.nick = $store.transaction { $store['irc']['nick'] }
+    c.modes = $store.transaction { $store['irc'].fetch('modes', []) }
     if $store.transaction { $store['irc'].fetch('sasl', false) }
       c.sasl.username = $store.transaction { $store['irc']['sasl']['username'] }
       c.sasl.password = $store.transaction { $store['irc']['sasl']['password'] }
@@ -67,8 +68,8 @@ bot = Cinch::Bot.new do
       path = $memes[$memes.keys.sample]
     end
     if path.nil?
-      warn 'Couldn\'t find meme'
-      m.reply "IDK what meme \"#{meme}\" is", true
+      warn "Couldn't find meme \"#{meme}\""
+      m.reply "IDK what meme \"#{meme}\" is, try !memes for a list", true
       break
     end
     top.gsub!(/[\x02\x0f\x16\x1f\x12]|\x03(\d{1,2}(,\d{1,2})?)?/, '')
@@ -99,6 +100,10 @@ bot = Cinch::Bot.new do
       $channels.delete m.channel.to_s
       $store.transaction {$store['channels']= $channels.uniq}
     end
+  end
+
+  on :ctcp, /version/i do |m|
+    m.ctcp_reply('http://github.com/paradox460/memebot')
   end
 end
 

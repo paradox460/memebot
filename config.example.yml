@@ -8,6 +8,8 @@ irc:
   port:
   ssl:
   nick:
+  # An array of modes the bot sets on itself
+  modes: 
   sasl:
     username:
     password:
