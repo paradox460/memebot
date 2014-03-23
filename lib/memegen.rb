@@ -84,16 +84,16 @@ class Meme
       if text.length < 10
         scale = 1.0
         spacing = 5
-      elsif text.length < 24
+      elsif text.length < 20
         text = word_wrap(text, 10)
         scale = 0.7
         spacing = 5
-      elsif text.length < 30
+      elsif text.length < 25
         text = word_wrap(text, 18)
         scale = 0.5
         spacing = 7
       else
-        text = word_wrap(text, 30)
+        text = word_wrap(text, 28)
         scale = 0.3
         spacing = 10
       end
