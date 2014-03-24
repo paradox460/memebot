@@ -51,9 +51,7 @@ bot = Cinch::Bot.new do
   configure do |c|
     c.server = $store.transaction { $store['irc']['server'] }
     c.port = $store.transaction { $store['irc'].fetch('port', 6667) }
-    c.realname = 'bouncer'
-	c.user = 'bouncer'
-    c.password = 'igetin201'
+    c.realname = 'lemaymay'
     c.ssl.use = $store.transaction { $store['irc'].fetch('ssl', false) }
     c.nick = $store.transaction { $store['irc']['nick'] }
     c.modes = $store.transaction { $store['irc'].fetch('modes', []) }
@@ -90,6 +88,7 @@ bot = Cinch::Bot.new do
   on :message, /^#{COMMAND_PREFIX}memes/ do |m|
     memes = $memes.keys
     m.reply memes.to_sentence, true
+    m.reply "Usage: !meme [m:<memename>] <top>;<bottom>", true
   end
 
   on :invite do |m|
