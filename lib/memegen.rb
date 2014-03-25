@@ -56,7 +56,8 @@ class Meme
       draw.font_weight = Magick::BoldWeight
       metrics = nil
 
-      text = WordWrapper::MinimumRaggedness.new(24, text).wrap
+      # Non-ragged word-wrap
+      text.word_wrap!(24)
 
       # Calculate out the largest pointsize that will fit
       loop do
@@ -89,5 +90,16 @@ class Meme
         self.pointsize = current_pointsize
       end
     end
+  end
+end
+
+class String
+  def word_wrap!(col)
+    text = self
+    text = WordWrapper::MinimumRaggedness.new(24, text).wrap
+    text = text.split("\n").map do |line|
+      line.length > col ? line.gsub(/(.{1,#{col}})( +|$\n?)|(.{1,#{col}})/, "\\1\\3\n").strip : line
+    end * "\n"
+    self.replace text.strip
   end
 end
