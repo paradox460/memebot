@@ -80,7 +80,7 @@ class Meme
       end
 
       draw.annotate(canvas, canvas.columns, canvas.rows - 10, 0, 0, text) do
-        # TODO: fix line height
+        self.interline_spacing = -( current_pointsize / 5)
         self.stroke_antialias(true)
         self.stroke = 'black'
         self.fill = 'white'
