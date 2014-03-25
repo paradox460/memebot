@@ -3,6 +3,7 @@
 channels:
 imgur:
   client_id:
+command_prefix: "!"
 irc:
   server:
   port:

@@ -9,6 +9,7 @@ $store = YAML::Store.new File.join(File.dirname(__FILE__), 'config.yml')
 $channels = $store.transaction { $store['channels'].uniq }
 
 CLIENT_ID = $store.transaction { $store['imgur']['client_id'] }
+COMMAND_PREFIX = $store.transaction { $store['command_prefix'] }
 $memes = Dir.glob("#{File.join(File.dirname(__FILE__), "memes")}/*.jpg").reduce({}) do |images, path|
   name = path.split('/').last.sub(/\.jpg$/,'')
   images.merge(name => path )
@@ -60,8 +61,7 @@ bot = Cinch::Bot.new do
     end
     c.channels = $channels
   end
-
-  on :message, /^!meme (?:m\:(\w+) )?(.*?);(.*)/i do |m, meme, top, bottom|
+  on :message, /^#{COMMAND_PREFIX}meme (?:m\:(\w+) )?(.*?);(.*)/i do |m, meme, top, bottom|
     if meme
       path = $memes[meme]
     else
@@ -69,7 +69,7 @@ bot = Cinch::Bot.new do
     end
     if path.nil?
       warn "Couldn't find meme \"#{meme}\""
-      m.reply "IDK what meme \"#{meme}\" is, try !memes for a list", true
+      m.reply "IDK what meme \"#{meme}\" is, try #{COMMAND_PREFIX}memes for a list", true
       break
     end
     top.gsub!(/[\x02\x0f\x16\x1f\x12]|\x03(\d{1,2}(,\d{1,2})?)?/, '')
@@ -85,8 +85,8 @@ bot = Cinch::Bot.new do
     end
   end
 
-  on :message, /^!memes/ do |m|
-    memes = $memes.keys.sort
+  on :message, /^#{COMMAND_PREFIX}memes/ do |m|
+    memes = $memes.keys
     m.reply memes.to_sentence, true
     m.reply "Usage: !meme [m:<memename>] <top>;<bottom>", true
   end
