@@ -1,6 +1,5 @@
 require 'fileutils'
 require 'RMagick'
-require 'pry'
 
 # Class for handling memes
 class Meme
@@ -81,6 +80,7 @@ class Meme
       end
 
       draw.annotate(canvas, canvas.columns, canvas.rows - 10, 0, 0, text) do
+        # TODO: fix line height
         self.stroke_antialias(true)
         self.stroke = 'black'
         self.fill = 'white'

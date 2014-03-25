@@ -1,5 +1,5 @@
 require 'cinch'
-require './lib/memegen'
+require_relative 'lib/memegen'
 require 'typhoeus'
 require 'oj'
 require 'active_support/core_ext/array/conversions'
