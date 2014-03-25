@@ -56,6 +56,9 @@ class Meme
       draw.font_weight = Magick::BoldWeight
       metrics = nil
 
+      text = word_wrap(text, 20) if text.length > 20
+      text = word_wrap(text, 30, true) if text.length > 30
+
       # Calculate out the largest pointsize that will fit
       loop do
         draw.pointsize = current_pointsize
@@ -77,8 +80,6 @@ class Meme
         end
       end
 
-      text = word_wrap(text, 30) if text.length > 30
-
       draw.annotate(canvas, canvas.columns, canvas.rows - 10, 0, 0, text) do
         self.stroke_antialias(true)
         self.stroke = 'black'
@@ -89,8 +90,12 @@ class Meme
       end
     end
 
-    def word_wrap(text, col = 80)
-      text.gsub(/(.{1,#{col}})( +|$\n?)|(.{1,#{col}})/, "\\1\\3\n")
+    def word_wrap(text, col = 80, split = false)
+      if split
+        text.gsub(/(.{1,#{col}})( +|$\n?)|(.{1,#{col}})/, "\\1\\3\n")
+      else
+        text.gsub(/(.{1,#{col + 4}})(\b+|\Z)/i, "\\1\n")
+      end
     end
   end
 end
