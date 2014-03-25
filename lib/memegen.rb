@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'RMagick'
+require 'word_wrapper'
 
 # Class for handling memes
 class Meme
@@ -55,8 +56,7 @@ class Meme
       draw.font_weight = Magick::BoldWeight
       metrics = nil
 
-      text = word_wrap(text, 20) if text.length > 20
-      text = word_wrap(text, 30, true) if text.length > 30
+      text = WordWrapper::MinimumRaggedness.new(24, text).wrap
 
       # Calculate out the largest pointsize that will fit
       loop do
@@ -87,14 +87,6 @@ class Meme
         self.gravity = gravity
         self.stroke_width = current_stroke
         self.pointsize = current_pointsize
-      end
-    end
-
-    def word_wrap(text, col = 80, split = false)
-      if split
-        text.gsub(/(.{1,#{col}})( +|$\n?)|(.{1,#{col}})/, "\\1\\3\n")
-      else
-        text.gsub(/(.{1,#{col + 4}})(\b+|\Z)/i, "\\1\n")
       end
     end
   end
