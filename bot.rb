@@ -87,8 +87,8 @@ bot = Cinch::Bot.new do
 
   on :message, /^#{COMMAND_PREFIX}memes/ do |m|
     memes = $memes.keys
-    m.reply memes.to_sentence, true
-    m.reply "Usage: !meme [m:<memename>] <top>;<bottom>", true
+    m.reply memes.sort.to_sentence, true
+    m.reply "Usage: #{COMMAND_PREFIX}meme [m:<memename>] <top>;<bottom>", true
   end
 
   on :invite do |m|
