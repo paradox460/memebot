@@ -80,7 +80,7 @@ bot = Cinch::Bot.new do
     url, error_hash = upload(file)
     if url == false
       warn "Upload error: #{error_hash}"
-      m.reply "Couldn't make that meme", true
+      m.reply "Couldn't make that meme (#{error_hash})", true
     else
       m.reply url, true
     end
