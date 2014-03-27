@@ -26,7 +26,7 @@ def upload(filepath)
     )
     credits = Oj.load(credits_response.body)
     # Return false unless our limits have reset to normal
-    return false unless credits['data']['UserRemaining'].to_i == credits['data']['UserLimit'].to_i || credits['data']['ClientRemaining'].to_i == credits['data']['ClientLimit'].to_i
+    return [false, {user_remaining: credits['data']['UserRemaining'], client_remaining: credits['data']['ClientRemaining']}] unless credits['data']['UserRemaining'].to_i == credits['data']['UserLimit'].to_i || credits['data']['ClientRemaining'].to_i == credits['data']['ClientLimit'].to_i
   end
 
   response = Typhoeus.post(
@@ -41,9 +41,9 @@ def upload(filepath)
   if response.code == 200
     @last = response
 
-    Oj.load(response.body)['data']['link']
+    [ Oj.load(response.body)['data']['link'], nil]
   else
-    false
+    [ false, { code: response.code } ]
   end
 end
 
@@ -77,8 +77,9 @@ bot = Cinch::Bot.new do
     bottom.gsub!(/[\x02\x0f\x16\x1f\x12]|\x03(\d{1,2}(,\d{1,2})?)?/, '')
     bottom.gsub!(/[\x00-\x1f]/, '')
     file = Meme.generate(path, top.strip, bottom.strip, "#{$store.transaction { $store['watermark_prefix'] }}/#{m.channel.to_s}")
-    url = upload(file)
+    url, error_hash = upload(file)
     if url == false
+      warn "Upload error: #{error_hash}"
       m.reply "Couldn't make that meme", true
     else
       m.reply url, true
