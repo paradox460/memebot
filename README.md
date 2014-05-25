@@ -4,7 +4,7 @@ A messy bot for making memes in IRC channels
 
 1. You need ruby 2.0 or newer. I coded against 2.1. You also need rmagick AND graphics magick
 2. Clone the git repo
-3. run `bundle install` to get the dependencies. This may fail on rmagick. If it does, google till you figure it out. Its simple, I promise
+3. run `bundle install` to get the dependencies. This may fail on rmagick. If it does, google till you figure it out. Its simple, I promise. If you run a Debian-based distro, running `sudo apt-get install graphicsmagick-libmagick-dev-compat libmagickwand-dev` works.
 3. Rename `config.example.yml` to `config.yml`
 4. Fill out `config.yml`. You will need an Imgur api key
 5. Start the bot via `ruby bot.rb`
