@@ -16,7 +16,7 @@ The bot is fairly simple to use via IRC, providing only two commands:
 + `!meme [m:memename] <toptext>;<bottomtext>` creates a meme. `m:memename` specifies the meme to use, semicolon is *required* and separates top and bottom meme text.
 
 # Caveats
-This bot was written in a single nights coding session. As such its ugly as hell and probably full of bugs. As with everything else under the MIT license, use at your own risk.
+This bot was written in a single nights bathtub coding session. As such its ugly as hell and probably full of bugs. As with everything else under the MIT license, use at your own risk.
 
 Additionally, if you run this on a server that doesn't reboot very often, chances are your `/tmp` folder will fill up with meme images.
 
