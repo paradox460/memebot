@@ -4,6 +4,7 @@ require 'typhoeus'
 require 'oj'
 require 'active_support/core_ext/array/conversions'
 require 'yaml/store'
+require 'damerau-levenshtein'
 
 $store = YAML::Store.new File.join(File.dirname(__FILE__), 'config.yml')
 $channels = $store.transaction { $store['channels'].uniq }
@@ -14,6 +15,8 @@ $memes = Dir.glob("#{File.join(File.dirname(__FILE__), "memes")}/*.jpg").reduce(
   name = path.split('/').last.sub(/\.jpg$/,'')
   images.merge(name => path )
 end
+
+$dl = DamerauLevenshtein
 
 def upload(filepath)
   # Check to see we haven't exceeded rate limits, based on the last request's data
@@ -47,7 +50,21 @@ def upload(filepath)
   end
 end
 
-bot = Cinch::Bot.new do 
+def best_meme(query, max_difference = 0.5)
+  distances = $memes.keys.map do |x|
+    longest = [query.length, x.length].max
+    damlev = $dl.distance(query, x, 1)
+    normalized_damlev = damlev / longest.to_f
+    [x, damlev, normalized_damlev]
+  end
+  if distances.min_by { |x| x[2] }[2] >= max_difference
+    nil
+  else
+    return distances.sort_by { |x| x[2] }.first
+  end
+end
+
+bot = Cinch::Bot.new do
   configure do |c|
     c.server = $store.transaction { $store['irc']['server'] }
     c.port = $store.transaction { $store['irc'].fetch('port', 6667) }
@@ -67,10 +84,16 @@ bot = Cinch::Bot.new do
     else
       path = $memes[$memes.keys.sample]
     end
+    # If no meme by that name exists…
     if path.nil?
-      warn "Couldn't find meme \"#{meme}\""
-      m.reply "IDK what meme \"#{meme}\" is, try #{COMMAND_PREFIX}memes for a list", true
-      break
+      guess = best_meme(meme)
+      if guess.nil?
+        m.reply "IDK what meme \"#{meme}\" is, try #{COMMAND_PREFIX}memes for a list", true
+        break
+      else
+        m.reply "Assuming you meant \"#{guess[0]}\", generating meme", true
+        path = $memes[guess[0]]
+      end
     end
     top.gsub!(/[\x02\x0f\x16\x1f\x12]|\x03(\d{1,2}(,\d{1,2})?)?/, '')
     top.gsub!(/[\x00-\x1f]/, '')
