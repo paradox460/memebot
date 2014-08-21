@@ -78,7 +78,7 @@ bot = Cinch::Bot.new do
     end
     c.channels = $channels
   end
-  on :message, /^#{COMMAND_PREFIX}meme (?:m\:(\w+) )?(.*?);(.*)/io do |m, meme, top, bottom|
+  on :message, /^\s*#{COMMAND_PREFIX}meme (?:m\:(\w+) )?(.*?);(.*)/io do |m, meme, top, bottom|
     if meme
       path = $memes[meme]
     else
@@ -109,7 +109,7 @@ bot = Cinch::Bot.new do
     end
   end
 
-  on :message, /^#{COMMAND_PREFIX}memes/io do |m|
+  on :message, /^\s*#{COMMAND_PREFIX}memes/io do |m|
     memes = $memes.keys
     m.reply memes.sort.to_sentence, true
     m.reply "Usage: #{COMMAND_PREFIX}meme [m:<memename>] <top>;<bottom>", true
