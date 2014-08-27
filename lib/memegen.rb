@@ -42,6 +42,9 @@ class Meme
     private
 
     def caption_meme(text, gravity, canvas)
+      
+      text.gsub!('\\', '\\\\\\')
+
       # 28 is the biggest pointsize memes dont look like shit on
       min_pointsize = 28
       max_pointsize = 128
@@ -79,7 +82,6 @@ class Meme
           current_stroke = current_pointsize / 30.0
         end
       end
-
       draw.annotate(canvas, canvas.columns, canvas.rows - 10, 0, 0, text) do
         self.interline_spacing = -( current_pointsize / 5)
         self.stroke_antialias(true)
