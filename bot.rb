@@ -25,7 +25,8 @@ def upload(filepath)
       'https://api.imgur.com/3/credits',
       headers: {
         Authorization: "Client-ID #{CLIENT_ID}"
-      }
+      },
+      nosignal: true
     )
     credits = Oj.load(credits_response.body)
     # Return false unless our limits have reset to normal
@@ -39,7 +40,8 @@ def upload(filepath)
     },
     headers: {
       Authorization: "Client-ID #{CLIENT_ID}"
-    }
+    },
+    nosignal: true
   )
   if response.code == 200
     @last = response
