@@ -5,6 +5,7 @@ require 'oj'
 require 'active_support/core_ext/array/conversions'
 require 'yaml/store'
 require 'damerau-levenshtein'
+require 'listen'
 
 $store = YAML::Store.new File.join(File.dirname(__FILE__), 'config.yml')
 $channels = $store.transaction { $store['channels'].uniq }
@@ -12,9 +13,28 @@ $channels = $store.transaction { $store['channels'].uniq }
 CLIENT_ID = $store.transaction { $store['imgur']['client_id'] }
 COMMAND_PREFIX = $store.transaction { $store['command_prefix'] }
 $memes = Dir.glob("#{File.join(File.dirname(__FILE__), "memes")}/*.jpg").reduce({}) do |images, path|
-  name = path.split('/').last.sub(/\.jpg$/,'')
+  path = Pathname.new(path).realpath
+  name = path.split.last.sub(/\.jpg$/, '').to_s
   images.merge(name => path )
 end
+
+$listen = Listen.to('memes', only: /\.jpg$/, debug: true) do |modified, added, removed|
+  if added.count > 0
+    added.each do |meme|
+      path = Pathname.new(meme).realpath
+      name = path.split.last.sub(/\.jpg$/, '').to_s
+      $memes[name] = path
+    end
+  end
+  if removed.count > 0
+    removed.each do |meme|
+      path = Pathname.new(meme).cleanpath
+      name = path.split.last.sub(/\.jpg$/, '').to_s
+      $memes.delete(name)
+    end
+  end
+end
+$listen.start
 
 $dl = DamerauLevenshtein
 
