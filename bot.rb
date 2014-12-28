@@ -18,7 +18,7 @@ $memes = Dir.glob("#{File.join(File.dirname(__FILE__), "memes")}/*.jpg").reduce(
   images.merge(name => path )
 end
 
-$listen = Listen.to('memes', only: /\.jpg$/, debug: true) do |modified, added, removed|
+$listen = Listen.to('memes', only: /\.jpg$/) do |_modified, added, removed|
   if added.count > 0
     added.each do |meme|
       path = Pathname.new(meme).realpath
