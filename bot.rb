@@ -50,7 +50,7 @@ def upload(filepath)
     )
     credits = Oj.load(credits_response.body)
     # Return false unless our limits have reset to normal
-    return [false, {user_remaining: credits['data']['UserRemaining'], client_remaining: credits['data']['ClientRemaining']}] unless credits['data']['UserRemaining'].to_i == credits['data']['UserLimit'].to_i || credits['data']['ClientRemaining'].to_i == credits['data']['ClientLimit'].to_i
+    return [false, { user_remaining: credits['data']['UserRemaining'], client_remaining: credits['data']['ClientRemaining'] }] unless credits['data']['UserRemaining'].to_i == credits['data']['UserLimit'].to_i || credits['data']['ClientRemaining'].to_i == credits['data']['ClientLimit'].to_i
   end
 
   response = Typhoeus.post(
@@ -66,9 +66,9 @@ def upload(filepath)
   if response.code == 200
     @last = response
 
-    [ Oj.load(response.body)['data']['link'], nil]
+    [Oj.load(response.body)['data']['link'], nil]
   else
-    [ false, { code: response.code } ]
+    [false, { code: response.code }]
   end
 end
 
@@ -140,12 +140,12 @@ bot = Cinch::Bot.new do
   on :invite do |m|
     bot.join m.channel
     $channels << m.channel.to_s
-    $store.transaction { $store['channels'] = $channels.uniq}
+    $store.transaction { $store['channels'] = $channels.uniq }
   end
   on :kick do |m|
     if m.params[1] == m.bot.to_s
       $channels.delete m.channel.to_s
-      $store.transaction {$store['channels']= $channels.uniq}
+      $store.transaction { $store['channels'] = $channels.uniq }
     end
   end
 
