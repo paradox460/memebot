@@ -149,7 +149,7 @@ bot = Cinch::Bot.new do
     end
   end
 
-  on :ctcp, /version/i do |m|
+  on :ctcp, /^version/i do |m|
     m.ctcp_reply('http://github.com/paradox460/memebot')
   end
 end
